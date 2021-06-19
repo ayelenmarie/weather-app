@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import _ from 'lodash'
 import { useEffect, useState } from 'react'
 
 export function useCurrentlocation(options = {}): any {
@@ -7,6 +8,8 @@ export function useCurrentlocation(options = {}): any {
         latitude: string
         longitude: string
     }>({ latitude: '', longitude: '' })
+
+    const hasGeolocation = !_.isEmpty(navigator.geolocation)
 
     // Success handler for geolocation's `getCurrentPosition` method
     const handleSuccess = (position: any) => {
@@ -24,13 +27,14 @@ export function useCurrentlocation(options = {}): any {
     }
 
     useEffect(() => {
-        if (!navigator.geolocation) {
-            setError('Geolocation not supported, sorry for the inconvenience')
-            return
+        if (!hasGeolocation) {
+            return setError(
+                'Geolocation not supported, sorry for the inconvenience'
+            )
         }
 
         // Call the Geolocation API
-        navigator.geolocation.getCurrentPosition(
+        return navigator.geolocation.getCurrentPosition(
             handleSuccess,
             handleError,
             options
