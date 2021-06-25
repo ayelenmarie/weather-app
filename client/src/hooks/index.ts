@@ -1,45 +1,82 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import _ from 'lodash'
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-export function useCurrentlocation(options = {}): any {
-    const [error, setError] = useState<string>('')
-    const [location, setLocation] = useState<{
-        latitude: string
-        longitude: string
-    }>({ latitude: '', longitude: '' })
+interface LocationInterface {
+    query: string
+    status: string
+    country: string
+    countryCode: string
+    region: string
+    regionName: string
+    city: string
+    zip: string
+    lat: string
+    lon: string
+    timezone: string
+    isp: string
+    org: string
+    as: string
+}
 
-    const hasGeolocation = !_.isEmpty(navigator.geolocation)
+interface ResponseInterface {
+    loading: boolean
+    location?: LocationInterface
+    error?: string
+}
 
-    // Success handler for geolocation's `getCurrentPosition` method
-    const handleSuccess = (position: any) => {
-        const { latitude, longitude } = position.coords
+export function useCurrentlocation(): ResponseInterface {
+    const [error, setError] = useState<string>()
+    const [location, setLocation] = useState<LocationInterface>()
+    const [loading, setLoading] = useState<boolean>(false)
 
-        setLocation({
-            latitude,
-            longitude,
-        })
-    }
-
-    // Error handler for geolocation's `getCurrentPosition` method
-    const handleError = (error: any) => {
-        setError(error.message)
+    const getLocation = async () => {
+        setLoading(true)
+        try {
+            const response = await axios.get('http://ip-api.com/json/')
+            setLocation(response.data)
+            setLoading(false)
+        } catch (e) {
+            setLoading(false)
+            setError(e.message)
+        }
     }
 
     useEffect(() => {
-        if (!hasGeolocation) {
-            return setError(
-                'Geolocation not supported, sorry for the inconvenience'
-            )
-        }
+        getLocation()
+    }, [])
 
-        // Call the Geolocation API
-        return navigator.geolocation.getCurrentPosition(
-            handleSuccess,
-            handleError,
-            options
-        )
-    })
+    // const hasGeolocation = !_.isEmpty(navigator.geolocation)
 
-    return { location, error }
+    // // Success handler for geolocation's `getCurrentPosition` method
+    // const handleSuccess = (position: any) => {
+    //     const { latitude, longitude } = position.coords
+
+    //     setLocation({
+    //         latitude,
+    //         longitude,
+    //     })
+    // }
+
+    // // Error handler for geolocation's `getCurrentPosition` method
+    // const handleError = (error: any) => {
+    //     setError(error.message)
+    // }
+
+    // useEffect(() => {
+    //     if (!hasGeolocation) {
+    //         return setError(
+    //             'Geolocation not supported, sorry for the inconvenience'
+    //         )
+    //     }
+
+    //     // Call the Geolocation API
+    //     return navigator.geolocation.getCurrentPosition(
+    //         handleSuccess,
+    //         handleError,
+    //         options
+    //     )
+    // })
+
+    return { loading, location, error }
 }

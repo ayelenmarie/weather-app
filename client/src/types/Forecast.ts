@@ -55,14 +55,14 @@ export type DailyForecast = {
 
 export type ForecastResponse = {
     config: unknown
-    data: Forecast
+    data: ForecastType
     headers: unknown
     request: unknown
     status: number
     statusText: string
 }
 
-export type Forecast = {
+export type ForecastType = {
     currentForecast: CurrentForecast
     dailyForecast: DailyForecast[]
 }

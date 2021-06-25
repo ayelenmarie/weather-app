@@ -3,21 +3,13 @@ import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import ClipLoader from 'react-spinners/ClipLoader'
+import _ from 'lodash'
 
 import { useCurrentlocation } from './hooks'
 import { Header } from './components/Header'
 import { Colors } from './style/Colors'
-import { Forecast, ForecastResponse } from './types/Forecast'
-import { CurrentForecast } from './components/CurrentForecast'
-import _ from 'lodash'
-
-/*
- * Constants
- */
-
-const geolocationOptions = {
-    timeout: 1000 * 60 * 1, // 1 min (1000 ms * 60 sec * 1 minute = 60 000ms)
-}
+import { ForecastType, ForecastResponse } from './types/Forecast'
+import { Forecast } from './components/Forecast'
 
 /*
  * Styles
@@ -25,9 +17,8 @@ const geolocationOptions = {
 
 const ContentContainer = styled.div`
     margin: 10px;
-    padding: 10px;
-    background-color: ${Colors.LIGHT_GREEN_60};
-    border-radius: 5px;
+    background-color: ${Colors.OFF_WHITE};
+    border-radius: 10px;
     box-shadow: 0px 0px 10px ${Colors.LIGHT_GREEN_60};
 `
 
@@ -36,31 +27,32 @@ const ContentContainer = styled.div`
  */
 
 export function App() {
-    const { location, error } = useCurrentlocation(geolocationOptions)
-    const [loading, setLoading] = useState<boolean>(false)
-    const [forecast, setForecast] = useState<Forecast | null>(null)
+    const { loading: loadingLocation, location, error } = useCurrentlocation()
+    const [loadingWeather, setLoadingWeather] = useState<boolean>(false)
+    const [forecast, setForecast] = useState<ForecastType | null>(null)
+
+    const hasLocation = !_.isEmpty(location)
 
     console.log('LOCATION', location)
 
-    console.log('HAS LOCATION?', location)
+    console.log('HAS LOCATION?', hasLocation)
 
     const getForecast = useCallback(async () => {
         try {
-            setLoading(true)
+            setLoadingWeather(true)
             const response: ForecastResponse = await axios.get(
-                `http://localhost:8080/forecast/${location.latitude}/${location.longitude}`
+                `http://localhost:8080/forecast/${location?.lat}/${location?.lon}`
             )
             console.log('RESPONSE', response)
             setForecast(response.data)
-            setLoading(false)
+            setLoadingWeather(false)
         } catch (e) {
-            setLoading(false)
+            setLoadingWeather(false)
         }
     }, [location])
 
     useEffect(() => {
-        if (location) {
-            console.log('latitude', location.latitude)
+        if (hasLocation) {
             getForecast()
         }
     }, [])
@@ -68,20 +60,32 @@ export function App() {
     return (
         <>
             <Header />
-            <ContentContainer>
-                {loading ? (
-                    <ClipLoader
-                        color={Colors.BLUE}
-                        loading={loading}
-                        size={150}
-                    />
-                ) : forecast ? (
-                    <CurrentForecast
-                        currentForecast={forecast?.currentForecast}
-                    />
+            <>
+                {loadingLocation ? (
+                    <p>Fetching your location...</p>
                 ) : (
-                    error && <p>ERROR</p>
+                    <p>
+                        {location?.city}, {location?.country}
+                    </p>
                 )}
+            </>
+            <ContentContainer>
+                <>
+                    {loadingWeather ? (
+                        <ClipLoader
+                            color={Colors.BLUE}
+                            loading={loadingWeather}
+                            size={150}
+                        />
+                    ) : forecast ? (
+                        <Forecast
+                            currentForecast={forecast?.currentForecast}
+                            dailyForecast={forecast?.dailyForecast}
+                        />
+                    ) : (
+                        error && <p>ERROR</p>
+                    )}
+                </>
             </ContentContainer>
         </>
     )
