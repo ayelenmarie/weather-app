@@ -10,13 +10,32 @@ import { Header } from './components/Header'
 import { Colors } from './style/Colors'
 import { ForecastType, ForecastResponse } from './types/Forecast'
 import { Forecast } from './components/Forecast'
+import { Locations } from './components/Locations'
+
+/*
+ * Types
+ */
+
+type SelectedLocationType = {
+    lat: string
+    lon: string
+}
+
+/*
+ * Constants
+ */
+
+const SelectedLocationDefault = {
+    lat: '',
+    lon: '',
+}
 
 /*
  * Styles
  */
 
 const ContentContainer = styled.div`
-    margin: 10px;
+    margin: 20px;
     background-color: ${Colors.OFF_WHITE};
     border-radius: 10px;
     box-shadow: 0px 0px 10px ${Colors.LIGHT_GREEN_60};
@@ -30,18 +49,17 @@ export function App() {
     const { loading: loadingLocation, location, error } = useCurrentlocation()
     const [loadingWeather, setLoadingWeather] = useState<boolean>(false)
     const [forecast, setForecast] = useState<ForecastType | null>(null)
+    const [selectedLocation, setSelectedLocation] =
+        useState<SelectedLocationType>(SelectedLocationDefault)
 
     const hasLocation = !_.isEmpty(location)
-
-    console.log('LOCATION', location)
-
-    console.log('HAS LOCATION?', hasLocation)
+    console.log(hasLocation)
 
     const getForecast = useCallback(async () => {
         try {
             setLoadingWeather(true)
             const response: ForecastResponse = await axios.get(
-                `http://localhost:8080/forecast/${location?.lat}/${location?.lon}`
+                `http://localhost:8080/forecast/${selectedLocation.lat}/${selectedLocation.lon}`
             )
             console.log('RESPONSE', response)
             setForecast(response.data)
@@ -49,25 +67,40 @@ export function App() {
         } catch (e) {
             setLoadingWeather(false)
         }
-    }, [location])
+    }, [selectedLocation])
 
     useEffect(() => {
-        if (hasLocation) {
+        if (selectedLocation && !loadingLocation) {
             getForecast()
         }
+    }, [selectedLocation])
+
+    useEffect(() => {
+        if (!loadingLocation && location) {
+            setSelectedLocation({
+                lat: location.lat,
+                lon: location.lon,
+            })
+        }
+    }, [loadingLocation])
+
+    const handleSelectedLocationClick = useCallback((lat, lon) => {
+        setSelectedLocation({
+            lat,
+            lon,
+        })
+        console.log('EN APP!!!', lat, lon)
     }, [])
 
     return (
         <>
             <Header />
             <>
-                {loadingLocation ? (
-                    <p>Fetching your location...</p>
-                ) : (
-                    <p>
-                        {location?.city}, {location?.country}
-                    </p>
-                )}
+                {loadingLocation && <p>Fetching your location...</p>}
+                <Locations
+                    currentLocation={location}
+                    onSelectedLocationClick={handleSelectedLocationClick}
+                />
             </>
             <ContentContainer>
                 <>

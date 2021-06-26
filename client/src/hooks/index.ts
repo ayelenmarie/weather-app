@@ -2,7 +2,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-interface LocationInterface {
+export interface LocationInterface {
     query: string
     status: string
     country: string
@@ -45,38 +45,6 @@ export function useCurrentlocation(): ResponseInterface {
     useEffect(() => {
         getLocation()
     }, [])
-
-    // const hasGeolocation = !_.isEmpty(navigator.geolocation)
-
-    // // Success handler for geolocation's `getCurrentPosition` method
-    // const handleSuccess = (position: any) => {
-    //     const { latitude, longitude } = position.coords
-
-    //     setLocation({
-    //         latitude,
-    //         longitude,
-    //     })
-    // }
-
-    // // Error handler for geolocation's `getCurrentPosition` method
-    // const handleError = (error: any) => {
-    //     setError(error.message)
-    // }
-
-    // useEffect(() => {
-    //     if (!hasGeolocation) {
-    //         return setError(
-    //             'Geolocation not supported, sorry for the inconvenience'
-    //         )
-    //     }
-
-    //     // Call the Geolocation API
-    //     return navigator.geolocation.getCurrentPosition(
-    //         handleSuccess,
-    //         handleError,
-    //         options
-    //     )
-    // })
 
     return { loading, location, error }
 }

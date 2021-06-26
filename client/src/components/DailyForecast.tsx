@@ -5,6 +5,7 @@ import { format } from 'date-fns'
 
 import { Colors } from '../style/Colors'
 import { DailyForecast as DailyForecastType } from '../types/Forecast'
+import _ from 'lodash'
 
 /*
  * Types
@@ -95,9 +96,11 @@ const DailyForecastItem = ({ item }: DailyForecastItemProps) => {
  */
 
 export const DailyForecast: FC<DailyForecastProps> = ({ dailyForecast }) => {
+    const cleanedDailyForecast = _.dropRight(_.drop(dailyForecast), 2)
+
     return (
         <Container>
-            {dailyForecast?.map((day, index) => {
+            {cleanedDailyForecast?.map((day, index) => {
                 return <DailyForecastItem item={day} key={index} />
             })}
         </Container>

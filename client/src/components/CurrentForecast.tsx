@@ -104,7 +104,7 @@ export const CurrentForecast: FC<CurrentForecastProps> = ({
     const forecastIcon =
         `http://openweathermap.org/img/wn/${weather.icon}@2x.png` || null
 
-    const formattedDate = format(forecastDate, 'cccc, PPp ')
+    const formattedDate = format(forecastDate, 'cccc ')
 
     return (
         <Container>
