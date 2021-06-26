@@ -36,6 +36,7 @@ const SelectedLocationDefault = {
 
 const ContentContainer = styled.div`
     margin: 20px;
+    width: 70%;
     background-color: ${Colors.OFF_WHITE};
     border-radius: 10px;
     box-shadow: 0px 0px 10px ${Colors.LIGHT_GREEN_60};
@@ -52,16 +53,12 @@ export function App() {
     const [selectedLocation, setSelectedLocation] =
         useState<SelectedLocationType>(SelectedLocationDefault)
 
-    const hasLocation = !_.isEmpty(location)
-    console.log(hasLocation)
-
     const getForecast = useCallback(async () => {
         try {
             setLoadingWeather(true)
             const response: ForecastResponse = await axios.get(
                 `http://localhost:8080/forecast/${selectedLocation.lat}/${selectedLocation.lon}`
             )
-            console.log('RESPONSE', response)
             setForecast(response.data)
             setLoadingWeather(false)
         } catch (e) {
@@ -89,36 +86,32 @@ export function App() {
             lat,
             lon,
         })
-        console.log('EN APP!!!', lat, lon)
     }, [])
 
     return (
         <>
             <Header />
-            <>
-                {loadingLocation && <p>Fetching your location...</p>}
-                <Locations
-                    currentLocation={location}
-                    onSelectedLocationClick={handleSelectedLocationClick}
-                />
-            </>
+            {loadingLocation && <p>Fetching your location...</p>}
+            <Locations
+                currentLocation={location}
+                onSelectedLocationClick={handleSelectedLocationClick}
+            />
+
             <ContentContainer>
-                <>
-                    {loadingWeather ? (
-                        <ClipLoader
-                            color={Colors.BLUE}
-                            loading={loadingWeather}
-                            size={150}
-                        />
-                    ) : forecast ? (
-                        <Forecast
-                            currentForecast={forecast?.currentForecast}
-                            dailyForecast={forecast?.dailyForecast}
-                        />
-                    ) : (
-                        error && <p>ERROR</p>
-                    )}
-                </>
+                {loadingWeather ? (
+                    <ClipLoader
+                        color={Colors.BLUE}
+                        loading={loadingWeather}
+                        size={150}
+                    />
+                ) : forecast ? (
+                    <Forecast
+                        currentForecast={forecast?.currentForecast}
+                        dailyForecast={forecast?.dailyForecast}
+                    />
+                ) : (
+                    error && <p>ERROR</p>
+                )}
             </ContentContainer>
         </>
     )

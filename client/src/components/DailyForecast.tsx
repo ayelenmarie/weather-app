@@ -27,6 +27,13 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
+
+    @media (max-width: 810px) {
+        flex-direction: column;
+        align-items: center;
+        order: +1;
+    }
 `
 
 const DateText = styled.p`

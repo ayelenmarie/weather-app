@@ -46,6 +46,10 @@ const Button = styled.button`
     margin: 0px 10px 0px 10px;
     background-color: ${(props: ButtonType) =>
         props.isLocationSelected ? Colors.CORAL : Colors.SAND};
+
+    @media (max-width: 810px) {
+        margin: 5px;
+    }
 `
 const TextButton = styled.p``
 
@@ -85,7 +89,6 @@ export const Locations: FC<LocationsProps> = ({
         },
     ]
     const locationsWithGeo = _.concat(geolocale, locations)
-    console.log(locationsWithGeo)
     const [locationSelected, setLocationSelected] = useState<string>()
 
     useEffect(() => {

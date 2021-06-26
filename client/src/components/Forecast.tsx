@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 import { FC } from 'react'
 import styled from 'styled-components'
@@ -8,16 +9,21 @@ import { DailyForecast } from './DailyForecast'
 import { TodaysHighlights } from './TodaysHighlights'
 
 /*
- * Types
- */
-
-/*
  * Styles
  */
 
 const Container = styled.div`
     display: grid;
     grid-template-columns: 30% 1fr;
+
+    @media (max-width: 810px) {
+        grid-template-columns: 1fr;
+    }
+`
+
+const Text = styled.p`
+    margin: 0px;
+    font-size: 30px;
 `
 
 /*
@@ -32,7 +38,9 @@ export const Forecast: FC<ForecastType> = ({
         <Container>
             <CurrentForecast currentForecast={currentForecast} />
             <DailyForecast dailyForecast={dailyForecast} />
-            <TodaysHighlights currentForecast={currentForecast} />
+            <div>
+                <TodaysHighlights currentForecast={currentForecast} />
+            </div>
         </Container>
     )
 }

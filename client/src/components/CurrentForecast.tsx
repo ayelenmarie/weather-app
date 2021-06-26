@@ -25,6 +25,10 @@ const Container = styled.div`
     border-radius: 10px 0px 0px 10px;
     grid-row-start: 1;
     grid-row-end: 3;
+
+    @media (max-width: 810px) {
+        border-radius: 10px 10px 0px 0px;
+    }
 `
 
 const VerticalTextContainer = styled.div`
@@ -37,12 +41,20 @@ const VerticalTextContainer = styled.div`
 const DateText = styled.p`
     color: ${Colors.GREY};
     font-size: 15px;
+
+    @media (max-width: 810px) {
+        text-align: center;
+    }
 `
 
 const TemperatureContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+
+    @media (max-width: 810px) {
+        justify-content: center;
+    }
 `
 
 const Temperature = styled.p`
@@ -50,6 +62,10 @@ const Temperature = styled.p`
     font-size: 200px;
     margin: 0px;
     color: ${Colors.BLUE};
+
+    @media (max-width: 1280px) {
+        font-size: 100px;
+    }
 `
 
 const TemperatureUnit = styled.p`
@@ -71,6 +87,10 @@ const ItalicText = styled.p`
     margin-left: 5px;
     font-size: 18px;
     font-style: italic;
+
+    @media (max-width: 810px) {
+        text-align: center;
+    }
 `
 
 const Image = styled.img`
