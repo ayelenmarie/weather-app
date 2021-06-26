@@ -1,46 +1,45 @@
-# Getting Started with Create React App
+# React Weather App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple weather feature that uses [Open Weather's One Call API](https://openweathermap.org/api/one-call-api).
 
-## Available Scripts
+## Installing dependencies - Server Side
 
-In the project directory, you can run:
+First, we'll need to install dependencies for the `/server` directory:
 
-### `yarn start`
+1. Go to the `server` directory. `cd server`
+2. `npm install` to install all necessary dependencies.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Installing dependencies - Client Side
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Then you'll neeed to install `/client` directory dependencies:
 
-### `yarn test`
+1. Go to `/client` directory. `cd .. && cd client`
+2. `yarn` to install all necessary dependencies.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Starting the application
 
-### `yarn build`
+You'll notice that inside the `/server` dependencies, there is a package called [Concurrently](https://www.npmjs.com/package/concurrently). This package is useful for CORS applications, since it provides a unique terminal where you can run your server and client side simultaneously, having visibility from both sides of the application at one. That is why we needed to install both dependencies before starting. Now we have that:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. If you're not already, go to the `/server` directory and run `npm run dev`. This will trigger the concurrently module and setup a terminal with both front and back applications running.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## About the stack
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This project was developed by using Node.js, React.js and Styled Components.
 
-### `yarn eject`
+- I've been using Styled Components for a while now and the more I do, the more I like it. Being able to create styled components directly instead of using SASS or even CSS over HTML tags filled with classes and ids is cleaner and more effective. It also helps debugging styles better, make UI structures faster, focusing more on the outcome than the process itself, and the scoping mindset that it provides follows React's arquitecture directly.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Given the size of this application I did not use any managing state library such as Redux or Context API. I decided to stick with `useState` hook in a functional component approach.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Use cases
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+As a user, I want to:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- Be able to get my current location and weather information based on it.
+- Select another weather location from the pre-listed ones.
 
-## Learn More
+## To-do list
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Add tests for mocking the data.
+- Add i18n to handle texts and possible translations.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Made by [Ayelen Guini](https://www.linkedin.com/in/ayelenmarie/) with 💛  and 😸!
